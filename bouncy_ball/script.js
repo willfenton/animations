@@ -109,8 +109,11 @@ var canvas = document.querySelector("#canvas");
 // used to draw on the canvas
 var c = canvas.getContext("2d");
 
-// track time
+// fast forward / slow down factor
 var timescale = 2;
+
+// track time
+var time = 0;
 
 // time step in seconds
 var timestep = 1 / 60;
