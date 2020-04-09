@@ -115,7 +115,7 @@ var timescale = 2;
 // time step in seconds
 var timestep = 1 / 60;
 
-var pixels_per_meter = Math.max(window.innerWidth, window.innerHeight) / 100;
+var pixels_per_meter = Math.round(Math.max(window.innerWidth, window.innerHeight) / 80);
 
 var dampening = 0.95;
 
