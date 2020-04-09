@@ -21,7 +21,6 @@ class Line {
         else {
             this.ax = ax;
             this.ay = ay;
-            
             //if (Math.random() > 0.5) {
             //    this.ax = ax;
             //    this.ay = ay;
