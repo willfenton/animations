@@ -1,16 +1,16 @@
 // Canvas
 function decimalToHex(number) {
-  if (number < 0) {
-    number = 0xffffffff + number + 1;
-  }
+    if (number < 0) {
+        number = 0xffffffff + number + 1;
+    }
 
-  let hex = number.toString(16).toUpperCase();
+    let hex = number.toString(16).toUpperCase();
 
-  if (hex.length === 1) {
-      hex = `0${hex}`;
-  }
+    if (hex.length === 1) {
+        hex = `0${hex}`;
+    }
 
-  return hex;
+    return hex;
 }
 
 class Star {
@@ -42,23 +42,22 @@ class Star {
     update() {
         this.x += this.speed * Math.cos(this.direction);
         this.y += this.speed * Math.sin(this.direction);
-        this.x %= window.innerWidth;
-        this.y %= window.innerHeight;
+        this.x %= (window.innerWidth + threshold);
+        this.y %= (window.innerHeight + threshold);
 
-        if (this.x < 0) {
-            this.x += window.innerWidth;
+        if ((this.x + threshold) < 0) {
+            this.x += (window.innerWidth + threshold);
         }
-        if (this.y < 0) {
-            this.y += window.innerHeight;
+        if ((this.y + threshold) < 0) {
+            this.y += (window.innerHeight + threshold);
         }
     }
 
     drawLine(otherStars) {
-        let threshold = 100;
         for (let other of otherStars) {
             if (other !== this && this.distance(other) < threshold) {
                 c.beginPath();
-                let opacity =  Math.round((threshold - this.distance(other)) / threshold * 256);
+                let opacity = Math.round((threshold - this.distance(other)) / threshold * 256);
                 c.strokeStyle = `${this.colour}${decimalToHex(opacity)}`;
                 c.moveTo(this.x, this.y);
                 c.lineTo(other.x, other.y);
@@ -84,6 +83,8 @@ let initialHue = Math.random() * 360;
 
 const stars = [];
 const size = 100;
+
+const threshold = 100;
 
 window.addEventListener('DOMContentLoaded', (event) => {
     for (let i = 0; i < size; i++) {
