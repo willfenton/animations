@@ -1,10 +1,24 @@
 // Canvas
+function decimalToHex(number) {
+  if (number < 0) {
+    number = 0xffffffff + number + 1;
+  }
+
+  let hex = number.toString(16).toUpperCase();
+
+  if (hex.length === 1) {
+      hex = `0${hex}`;
+  }
+
+  return hex;
+}
+
 class Star {
     constructor() {
         this.x = Math.random() * window.innerWidth;
         this.y = Math.random() * window.innerHeight;
 
-        this.speed = Math.random() + .5;
+        this.speed = Math.random() * .4 + .2;
         this.direction = Math.random() * Math.PI * 2;
 
         this.size = Math.random() + 2
@@ -18,6 +32,7 @@ class Star {
 
         c.fillStyle = this.colour;
         c.globalAlpha = 1;
+        c.strokeStyle = this.colour
 
         c.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
 
@@ -37,6 +52,25 @@ class Star {
             this.y += window.innerHeight;
         }
     }
+
+    drawLine(otherStars) {
+        let threshold = 100;
+        for (let other of otherStars) {
+            if (other !== this && this.distance(other) < threshold) {
+                c.beginPath();
+                let opacity =  Math.round((threshold - this.distance(other)) / threshold * 256);
+                c.strokeStyle = `${this.colour}${decimalToHex(opacity)}`;
+                c.moveTo(this.x, this.y);
+                c.lineTo(other.x, other.y);
+                c.stroke();
+            }
+        }
+    }
+
+    distance(other) {
+        // euclidian distance function
+        return Math.sqrt(Math.pow(this.x - other.x, 2) + Math.pow(this.y - other.y, 2));
+    }
 }
 
 // gets the canvas element
@@ -55,7 +89,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
     for (let i = 0; i < size; i++) {
         stars.push(new Star());
     }
-    console.table([window.innerWidth, window.innerHeight])
 });
 
 // Update circle X times per second (1000ms / X)
@@ -76,6 +109,7 @@ function animate() {
     // clear the canvas
     c.clearRect(0, 0, canvas.width, canvas.height);
     for (star of stars) {
+        star.drawLine(stars);
         star.draw();
     }
 }
