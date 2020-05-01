@@ -7,6 +7,8 @@ class Star {
         this.speed = Math.random() + .5;
         this.direction = Math.random() * Math.PI * 2;
 
+        this.size = Math.random() + 2
+
         // color
         this.colour = '#ffffff';
     }
@@ -17,7 +19,7 @@ class Star {
         c.fillStyle = this.colour;
         c.globalAlpha = 1;
 
-        c.arc(this.x, this.y, 5, 0, Math.PI * 2, false);
+        c.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
 
         c.fill();
     }
