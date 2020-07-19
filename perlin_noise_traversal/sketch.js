@@ -6,7 +6,7 @@ var noise_field_size_factor = 100;  // controls how big the view of the noise fi
 var x_samples, y_samples;
 
 var center, dest, heading;
-var velocity = 0.05;        // controls how quickly to move through the noise field
+var velocity;        // controls how quickly to move through the noise field
 var heading_change = 0.01;  // controls how much the heading vector can change every frame
 
 var border_size = 0;        // size of the borders in pixels
@@ -24,6 +24,8 @@ function setup() {
     // the size of the slice of the noise field is tied to the screen size
     noise_width = width / noise_field_size_factor;
     noise_height = height / noise_field_size_factor;
+
+    velocity = noise_width * 0.001;
 
     // number of points that fit on the screen
     x_samples = Math.floor((width - (2 * border_size)) / (max_point_size + (2 * point_spacing)));
