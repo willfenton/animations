@@ -4,6 +4,8 @@ var noise_width, noise_height;
 var noise_field_size_factor = 100;  // controls how big the view of the noise field is
 
 var x_samples, y_samples;
+var min_axis_samples = 50;
+var min_point_size = 15;
 
 var center, dest, heading;
 var velocity;        // controls how quickly to move through the noise field
@@ -28,6 +30,7 @@ function setup() {
     velocity = noise_width * 0.001;
 
     // number of points that fit on the screen
+    max_point_size = Math.max(min_point_size, Math.floor(Math.min(width, height) / min_axis_samples));
     x_samples = Math.floor((width - (2 * border_size)) / (max_point_size + (2 * point_spacing)));
     y_samples = Math.floor((height - (2 * border_size)) / (max_point_size + (2 * point_spacing)));
 
@@ -55,22 +58,32 @@ function draw() {
     background(background_color);
     strokeWeight(0);
 
+    let left_boundary = Math.ceil(border_size + (max_point_size / 2));
+    let right_boundary = Math.floor(width - border_size - (max_point_size / 2));
+    let top_boundary = Math.ceil(border_size + (max_point_size / 2));
+    let bottom_boundary = Math.floor(height - border_size - (max_point_size / 2));
+
+    let noise_left_bound = center.x - (noise_width / 2);
+    let noise_right_bound = center.x + (noise_width / 2);
+    let noise_bottom_bound = center.y - (noise_height / 2);
+    let noise_top_bound = center.y + (noise_height / 2);
+
     // draw the current slice of the noise field
-    for (let x = 0; x < x_samples; x++) {
-        for (let y = 0; y < y_samples; y++) {
+    for (let x = 1; x <= x_samples; x++) {
+        for (let y = 1; y <= y_samples; y++) {
             // position of the point on the screen
-            let px = map(x, 0, x_samples - 1, border_size + (max_point_size / 2), width - border_size - (max_point_size / 2));
-            let py = map(y, 0, y_samples - 1, border_size + (max_point_size / 2), height - border_size - (max_point_size / 2));
+            let px = map(x, 1, x_samples, left_boundary, right_boundary);
+            let py = map(y, 1, y_samples, top_boundary, bottom_boundary);
 
             // position of the point in the noise field
-            let noise_x = map(x, 0, x_samples - 1, center.x - (noise_width / 2), center.x + (noise_width / 2));
-            let noise_y = map(y, 0, y_samples - 1, center.y - (noise_height / 2), center.y + (noise_height / 2));
+            let noise_x = map(x, 1, x_samples, noise_left_bound, noise_right_bound);
+            let noise_y = map(y, 1, y_samples, noise_bottom_bound, noise_top_bound);
 
             let noise_value = noise(noise_x, noise_y);
 
             // the noise value determines the color and size of the point
-            let color = map(noise_value, 0, 1, 0, 255);
-            let size = map(noise_value, 0, 1, 0, max_point_size);
+            let color = Math.round(map(noise_value, 0, 1, 0, 255));
+            let size = Math.round(map(noise_value, 0, 1, 0, max_point_size));
 
             // draw the point
             fill(color);
